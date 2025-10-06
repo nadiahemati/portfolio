@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio - Nadia Hemati</title>
+  <meta name="description" content="Responsive portfolio in pure HTML, CSS & a dash of JS (dark mode supported)." />
+  <style>
+
+    .contact-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: .9rem;
+      padding: 1.1rem 1rem;
+      border-radius: 14px;
+      transition: transform .08s ease;
+    }
+    .contact-item:hover { transform: translateY(-1px); }
+    .contact-item svg { opacity: .9 }
+    .muted { color: var(--muted); }
+
+    /* Stack on mobile */
+    @media (max-width: 640px){
+      .contact-cards { grid-template-columns: 1fr; }
+    }
+
+    :root {
+      --bg: #ffffff;
+      --text: #0b0b0f;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --brand: #111827;
+      --accent: #111827;
+      --ring: rgba(15, 23, 42, 0.08);
+      --shadow: 0 10px 30px rgba(2, 6, 23, 0.05);
+      --radius: 18px;
+      --chip: rgba(17, 24, 39, 0.04);
+    }
+    .dark {
+      --bg: #0b0c10;
+      --text: #f5f7fb;
+      --muted: #a3a8b7;
+      --card: #0f1117;
+      --border: #1c1f27;
+      --brand: #f5f7fb;
+      --accent: #f5f7fb;
+      --ring: rgba(255, 255, 255, 0.08);
+      --chip: rgba(255,255,255,0.06);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; }
+
+    
+    .container { width: min(1160px, 92%); margin: 0 auto; }
+    .pill { border-radius: 999px; }
+    .btn { display:inline-flex; align-items:center; gap:.6rem; padding:.95rem 1.25rem; border-radius: 999px; border:1px solid var(--border); background: var(--text); color: #fff; box-shadow: var(--shadow); }
+    .btn.secondary { background: transparent; color: var(--text); }
+    .btn.secondary:hover { background: var(--chip); }
+    .btn:hover { filter: brightness(0.98); transform: translateY(-1px); }
+    .btn svg { width: 18px; height: 18px; }
+
+    .chip { background: var(--chip); border: 1px solid var(--border); padding:.5rem .9rem; border-radius:999px; font-size:.9rem; }
+
+    .card { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+
+    header.nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(180%) blur(8px);
+      background: color-mix(in oklab, var(--bg) 80%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;   /* left / center / right */
+      align-items: center;
+      gap: 1rem;
+      padding: .9rem 0;
+    }
+    .brand { font-weight: 800; letter-spacing:.4px; justify-self: start; }
+    .brand::after { content:""; width:6px; height:6px; border-radius:50%; background:#e11d48; display:inline-block; margin-left:4px; position: relative; top:-2px; }
+
+    .nav-center { justify-self: center; display:flex; gap:.6rem; padding:.3rem; background: var(--chip); border: 1px solid var(--border); border-radius:999px; }
+    .nav-center a { padding:.45rem .85rem; border-radius:999px; font-size:.95rem; color: var(--muted); }
+    .nav-center a.active, .nav-center a:hover { background: var(--card); color: var(--text); box-shadow: var(--shadow); }
+
+    .nav-right{ justify-self: end; display:flex; align-items:center; gap:.75rem; }
+    .toggle { width:40px; height:40px; display:grid; place-items:center; border:1px solid var(--border); background: var(--card); border-radius:50%; }
+    .toggle:hover{ box-shadow: var(--shadow); }
+
+    .hero { position: relative; padding: 96px 0 80px; overflow: hidden; }
+    .hero::before {content: "";position: absolute;inset: -25% -10% auto -10%;height: 440px;background:radial-gradient(900px 320px at 50% -10%, #fde68a33, transparent 55%),radial-gradient(700px 260px at 50% -18%, #c7d2fe33, transparent 60%);pointer-events: none;}
+    .hero .hero-stack {max-width: 820px;margin: 0 auto;display: flex;flex-direction: column;align-items: center; text-align: center; gap: 0.9rem;}
+    .hero .avatar {width: 110px; height: 110px;border-radius: 50%;overflow: hidden;border: 4px solid var(--card);box-shadow: var(--shadow);}
+    .hero h1 {font-size: clamp(2.2rem, 4.2vw, 3.4rem);line-height: 1.2;margin: .25rem 0 .25rem;letter-spacing: .3px;}
+    .hero .subtitle {color: var(--muted);max-width: 60ch;margin: 0;}
+    .hero .actions {display: flex;gap: .8rem;margin-top: 0.6rem;flex-wrap: wrap;justify-content: center;}
+    @media (max-width: 640px) {.hero { padding-top: 72px; }}
+
+    section { padding: 72px 0; }
+    .section-head { text-align:center; margin-bottom: 36px; }
+    .eyebrow { color: var(--muted); letter-spacing: .12em; text-transform: uppercase; font-size:.85rem; }
+    .title { font-size: clamp(1.6rem, 2.6vw, 2.4rem); margin:.3rem 0; }
+
+    .about-grid { display:grid; grid-template-columns: 1fr; gap: 2.2rem; align-items:start; }
+    .about-photo { border-radius: 24px; overflow:hidden; }
+    .about-photo img { height: 320px; width: 100%; object-fit: cover; }
+    @media (max-width: 640px){ .about-photo img { height: 260px; } }
+    .about-text p { color: var(--muted); }
+    .about-cards { display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin: 1.2rem 0 0; }
+    .about-card { padding: 1.2rem; }
+    .about-card h4 { margin: .2rem 0 .4rem; }
+    .about-card p { color: var(--muted); font-size:.95rem; }
+
+    .tools { display:flex; gap:.6rem; align-items:center; margin-top:1.25rem; flex-wrap:wrap; }
+    .tool { width:44px; height:44px; border-radius: 12px; background: var(--card); border:1px solid var(--border); display:grid; place-items:center; box-shadow: var(--shadow); }
+    .tool img { width:22px; height:22px; }
+
+    .services-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; }
+    .service { padding: 1.3rem; }
+    .service h4 { margin: .3rem 0 .4rem; }
+    .service p { color: var(--muted); font-size:.96rem; }
+
+    .work-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; }
+    .work-card { position:relative; overflow:hidden; border-radius: 16px; border:1px solid var(--border); background: #e5e7eb; }
+    .work-card img { width:100%; height:200px; object-fit:cover; filter:saturate(0.9); }
+    .work-badge { position:absolute; left:12px; bottom:12px; right:12px; display:flex; align-items:center; justify-content:space-between; padding:.7rem .9rem; background: rgba(255,255,255,.9); color:#111; border-radius: 14px; border:1px solid #e5e7eb; backdrop-filter: blur(8px); text-decoration: none; }
+    .work-badge:hover { transform: translateY(-1px); }
+    .dark .work-badge { background: rgba(17, 24, 39, .7); color:#f5f7fb; border-color:#2a2f3a; }
+    .work-badge small { display:block; color:#4b5563; }
+    .dark .work-badge small { color:#a3a8b7; }
+
+    footer { padding:40px 0 60px; color:var(--muted); text-align:center; border-top:1px solid var(--border); }
+
+    @media (max-width: 1024px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .about-photo { order: -1; max-width: 460px; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .work-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px){
+      .nav-center { display:none; }
+      .hero { padding-top: 56px; }
+      .services-grid, .work-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#home" class="brand">PORTFOLIO</a>
+      <nav class="nav-center pill" aria-label="Primary">
+        <a class="active" href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#work">My Work</a>
+        <a href="#contact">Contact me</a>
+      </nav>
+      <div class="nav-right">
+        <button class="toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <svg id="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <a href="#contact" class="btn secondary">Contact ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="container">
+      <div class="hero-stack">
+        <div class="avatar">
+          <img src="images/profile_picture.JPG" alt="Portrait of Nadia Hemati"/>
+        </div>
+
+        <span class="chip">Hi! I'm Nadia Hemati 👋</span>
+
+        <h1>Frontend web developer<br />based in Afghanistan.</h1>
+
+        <p class="subtitle">Frontend Web Developer / UI/UX Enthusiast / Creative Visual Designer</p>
+
+        <div class="actions">
+          <a class="btn secondary" href="assets/NadiaHemati.pdf" download>
+              Download Resume
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Introduction</div>
+        <h2 class="title">About me</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>I’m a computer programming graduate with a love for turning ideas into interactive, user-friendly designs. Frontend development and UI/UX design are where I thrive—I enjoy blending creativity with clean code to craft experiences that not only look good but feel effortless to use. For me, every project is a chance to design with purpose and make the web more enjoyable.</p>
+
+          <div class="about-cards">
+            <div class="about-card card">
+              <div class="chip" aria-hidden="true">&lt;/&gt;</div>
+              <h4>Languages</h4>
+              <p>HTML, CSS, JavaScript<br/>PHP, Python, SQL</p>
+            </div>
+            <div class="about-card card">
+              <div class="chip" aria-hidden="true">🎓</div>
+              <h4>Education</h4>
+              <p>Computer Programming Graduate</p>
+            </div>
+            <div class="about-card card">
+              <div class="chip" aria-hidden="true">💼</div>
+              <h4>Projects</h4>
+              <p>Built more than 4 projects</p>
+            </div>
+          </div>
+
+          <div class="tools" aria-label="Tools I use">
+            <div class="tool" title="VS Code">
+              <img alt="VS Code" src="images/icons8-visual-studio-code-48.png" />
+            </div>
+            <div class="tool" title="PyCharm">
+              <img alt="PyCharm" src="https://cdn.simpleicons.org/pycharm" />
+            </div>
+            <div class="tool" title="Figma">
+              <img alt="Figma" src="https://cdn.simpleicons.org/figma/F24E1E" />
+            </div>
+            <div class="tool" title="Jupyter Notebook">
+              <img alt="Jupyter" src="https://cdn.simpleicons.org/jupyter/F37626" />
+            </div>
+          </div>
+          <small style="color:var(--muted); display:block; margin-top:.35rem">Tools I use</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">What I offer</div>
+        <h2 class="title">My Services</h2>
+        <p style="color:var(--muted); max-width:65ch; margin: .2rem auto 0"></p>
+      </div>
+      <div class="services-grid">
+        <article class="service card">
+          <div class="chip">🌐</div>
+          <h4>Web development</h4>
+          <p>Building fast, responsive, and modern websites using the latest web technologies to deliver seamless user experiences across all devices.</p>
+        </article>
+        <article class="service card">
+          <div class="chip">📱</div>
+          <h4>Mobile App Design</h4>
+          <p>Designing and building responsive, performant UIs for iOS, Android and PWAs.</p>
+        </article>
+        <article class="service card">
+          <div class="chip">🧩</div>
+          <h4>UI/UX design</h4>
+          <p>Creating seamless user experiences with accessible, component-driven systems.</p>
+        </article>
+        <article class="service card">
+          <div class="chip">🖼️</div>
+          <h4>Graphic design</h4>
+          <p>Creative design solutions to enhance visual communication for brands and products.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">My portfolio</div>
+        <h2 class="title">My latest work</h2>
+        <p style="color:var(--muted); max-width:65ch; margin:.2rem auto 0">Welcome to my web development portfolio! Explore a collection of projects showcasing my expertise in front-end development.</p>
+      </div>
+      <div class="work-grid">
+        <article class="work-card">
+          <img src="images/image_1.png" alt="Frontend project"/>
+          <a class="work-badge" href="https://example.com/frontend-project" target="_blank" rel="noopener" aria-label="Open Frontend project">
+            <div><strong>Frontend project</strong><br/><small>Web Design</small></div><span>➜</span>
+          </a>
+        </article>
+        <article class="work-card">
+          <img src="images/image_2.png" alt="UI/UX designing"/>
+          <a class="work-badge" href="https://www.figma.com/design/NoGdV39iTtQWnGlTNiItpO/LushGlow-E-commerce-Design?node-id=82-32&p=f&t=qJMMHujhECl4e5pf-0" target="_blank" rel="noopener" aria-label="Open UI/UX designing">
+            <div><strong>UI/UX designing</strong><br/><small>UI/UX Design</small></div><span>➜</span>
+          </a>
+        </article>
+        <article class="work-card">
+          <img src="images/image_3.png" alt="Photography site"/>
+          <a class="work-badge" href="https://www.figma.com/design/VOmPdM2UrhdGRiDJlf81qw/Untitled?node-id=2-17&p=f&t=ATex6uAriqpbiXcA-0" target="_blank" rel="noopener" aria-label="Open Photography site">
+            <div><strong>Landing Page Design</strong><br/><small>UI/UX Design</small></div><span>➜</span>
+          </a>
+        </article>
+        <article class="work-card">
+          <img src="images/image_4.png" alt="Branding"/>
+          <a class="work-badge" href="https://www.figma.com/design/VOmPdM2UrhdGRiDJlf81qw/Untitled?node-id=0-1&p=f&t=ATex6uAriqpbiXcA-0" target="_blank" rel="noopener" aria-label="Open Photography site">
+            <div><strong>Brand Identity</strong><br/><small>Branding</small></div><span>➜</span>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" itemscope itemtype="https://schema.org/Person">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Connect with me</div>
+        <h2 class="title" itemprop="name">Get in touch</h2>
+        <p style="color:var(--muted); max-width:65ch; margin:.2rem auto 0">
+          Reach me directly via email, phone, or LinkedIn.
+        </p>
+      </div>
+
+      <div class="contact-cards">
+        <a class="contact-item card" href="mailto:nadiahemati0@gmail.com" itemprop="email">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/>
+          </svg>
+          <div>
+            <strong>Email</strong>
+            <div class="muted">nadiahemati0@gmail.com</div>
+          </div>
+          <span aria-hidden="true">↗</span>
+        </a>
+        
+        
+        <a class="contact-item card" href="https://github.com/nadiahemati" target="_blank" rel="noopener" itemprop="sameAs" aria-label="View my GitHub profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .5A11.5 11.5 0 0 0 .5 12.24c0 5.16 3.35 9.53 8 11.07.58.11.79-.26.79-.57 0-.28-.01-1.02-.02-2-3.26.73-3.95-1.59-3.95-1.59-.53-1.38-1.3-1.75-1.3-1.75-1.06-.75.08-.73.08-.73 1.17.08 1.79 1.23 1.79 1.23 1.04 1.83 2.73 1.3 3.4.99.11-.78.41-1.3.75-1.6-2.6-.3-5.33-1.35-5.33-6 0-1.33.46-2.41 1.22-3.26-.12-.3-.53-1.52.12-3.17 0 0 1-.33 3.3 1.24a11.3 11.3 0 0 1 3-.41c1.02 0 2.05.14 3 .41 2.3-1.57 3.3-1.24 3.3-1.24.66 1.65.25 2.87.13 3.17.76.85 1.22 1.93 1.22 3.26 0 4.67-2.74 5.69-5.35 5.99.42.37.8 1.09.8 2.2 0 1.59-.01 2.86-.01 3.25 0 .32.21.69.8.57a11.51 11.51 0 0 0 7.99-11.07A11.5 11.5 0 0 0 12 .5Z"/>
+          </svg>
+          <div>
+            <strong>GitHub</strong>
+            <div class="muted">github.com/nadiahemati</div>
+          </div>
+          <span aria-hidden="true">↗</span>
+        </a>
+
+
+        <a class="contact-item card" href="https://www.linkedin.com/in/nadiahemati" target="_blank" rel="noopener"
+           itemprop="sameAs">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 8h5v16H0V8zm7.5 0H12v2.2h.06c.63-1.2 2.17-2.46 4.47-2.46C21 7.74 24 10.1 24 15.08V24h-5v-7.7c0-1.84-.03-4.2-2.56-4.2-2.56 0-2.95 2-2.95 4.07V24H7.5V8z"/>
+          </svg>
+          <div>
+            <strong>LinkedIn</strong>
+            <div class="muted">linkedin.com/in/nadiahemati</div>
+          </div>
+          <span aria-hidden="true">↗</span>
+        </a>
+
+        <div class="contact-item card" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <div>
+            <strong>Location</strong>
+            <div class="muted" itemprop="addressLocality">Kabul, Afghanistan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="y"></span> Nadia Hemati. All rights reserved.</div>
+  </footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    const sections = [...document.querySelectorAll('section')];
+    const links = [...document.querySelectorAll('.nav-center a')];
+    const map = Object.fromEntries(links.map(a => [a.getAttribute('href').slice(1), a]));
+    const sp = new IntersectionObserver((entries)=>{
+      entries.forEach(e => { if(e.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        (map[e.target.id]||{}).classList?.add('active');
+      }});
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: .01 });
+    sections.forEach(s => sp.observe(s));
+
+    const root = document.documentElement;
+    const saved = localStorage.getItem('theme');
+    if(saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)){
+      root.classList.add('dark');
+    }
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      root.classList.toggle('dark');
+      localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>
