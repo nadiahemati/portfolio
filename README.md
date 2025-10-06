@@ -1,3 +1,9 @@
 # Portfolio — Nadia Hemati
 
-Responsive portfolio built with HTML, CSS & JS — showcasing frontend projects, Figma designs, and dark mode.
+A responsive and accessible personal portfolio website built with pure HTML, CSS, and vanilla JavaScript.
+
+It highlights my work as a Frontend Developer and UI/UX Designer, featuring live project links, Figma prototypes, 
+and an interactive dark mode toggle.
+
+Designed with performance, simplicity, and usability in mind — this site demonstrates clean structure, semantic code, 
+and modern web techniques.
